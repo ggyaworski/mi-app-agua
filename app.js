@@ -8,6 +8,20 @@ window.onload = function() {
         document.getElementById('btn-permiso').style.display = 'block';
     }
 
+    // --- LOGICA DE RESETEO AUTOMATICO DIARIO ---
+    let fechaHoy = new Date().toLocaleDateString();
+    let ultimaFechaGuardada = localStorage.getItem('ultimaFechaRegistro');
+
+    if (ultimaFechaGuardada !== fechaHoy) {
+        // Es un día nuevo o la primera vez que entra: limpiamos consumo viejo
+        localStorage.removeItem('aguaPura');
+        localStorage.removeItem('otrosLiquidos');
+        localStorage.removeItem('colagenoTomado');
+        // Guardamos la fecha de hoy para el próximo control
+        localStorage.setItem('ultimaFechaRegistro', fechaHoy);
+    }
+    // -------------------------------------------
+
     if (localStorage.getItem('pesoUsuario')) {
         document.getElementById('txt-peso').value = localStorage.getItem('pesoUsuario');
         document.getElementById('txt-altura').value = localStorage.getItem('alturaUsuario');
@@ -68,6 +82,8 @@ function tomarColageno() {
     document.getElementById('lbl-agua').innerText = aguaPura;
     localStorage.setItem('aguaPura', aguaPura);
     localStorage.setItem('colagenoTomado', 'true');
+    // Asentamos la fecha del registro adentro de la función
+    localStorage.setItem('ultimaFechaRegistro', new Date().toLocaleDateString());
     deshabilitarBotonColageno();
     reiniciarTemporizadorAlerta();
 }
@@ -89,6 +105,8 @@ function sumarLiquido(tipo, cantidad) {
         localStorage.setItem('otrosLiquidos', otrosLiquidos);
         programarAlertaCompensacion();
     }
+    // Asentamos la fecha del registro acá también, al final de la función
+    localStorage.setItem('ultimaFechaRegistro', new Date().toLocaleDateString());
 }
 
 function programarAlertaCompensacion() {
@@ -100,7 +118,6 @@ function programarAlertaCompensacion() {
         return;
     }
     
-    // 2 horas en milisegundos clavadas para el día a día
     let tiempoEspera = 7200000; 
 
     temporizadorAgua = setTimeout(() => {
