@@ -1,0 +1,100 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 0;
+}
+.container {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+.card {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+button {
+    background-color: #29b6f6;
+    color: #121212;
+    border: none;
+    padding: 12px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover { background-color: #4fc3f7; }
+button:disabled { background-color: #555; color: #888; cursor: not-allowed; }
+
+.btn-colageno { 
+    background-color: #ec407a; 
+    color: white; 
+    width: 100%; 
+    padding: 12px 20px; 
+    font-size: 16px;
+}
+.btn-colageno:hover { background-color: #f48fb1; }
+
+.grid-inputs, .grid-botones {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+.btn-consumo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 70px;
+}
+.btn-mate { background-color: #66bb6a; color: #121212; }
+.btn-mate:hover { background-color: #98ee99; }
+
+input {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 5px;
+}
+.meta-destacada {
+    font-size: 24px;
+    font-weight: bold;
+    color: #29b6f6;
+    margin: 15px 0 5px 0;
+}
+.btn-permiso {
+    background-color: #ffb74d;
+    color: #121212;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.btn-reset {
+    background-color: #e53935;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+.btn-reset:hover { background-color: #ef5350; }
