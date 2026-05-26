@@ -46,17 +46,30 @@
         .btn-mate { background-color: #66bb6a; color: #121212; }
         .btn-mate:hover { background-color: #98ee99; }
         
-        /* Estilos nuevos para los inputs de configuración */
+        /* Contenedor pro para los inputs en línea */
+        .grid-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
         input {
             background-color: #333;
             color: white;
             border: 1px solid #555;
             padding: 8px;
             border-radius: 5px;
-            width: 80px;
-            margin: 5px;
+            width: 100%;
+            box-sizing: border-box;
             text-align: center;
             font-size: 16px;
+            margin-top: 5px;
         }
         .meta-destacada {
             font-size: 24px;
@@ -72,9 +85,22 @@
         <h1>Mi Hidratación</h1>
         
         <div class="card">
-            <h3>Mis Datos</h3>
-            <label>Peso (kg): <input type="number" id="txt-peso" value="70"></label>
-            <button onclick="guardarPerfil()">Calcular Meta</button>
+            <h3>Mis Datos Biométricos</h3>
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label for="txt-peso">Peso (kg)</label>
+                    <input type="number" id="txt-peso" value="70">
+                </div>
+                <div class="input-group">
+                    <label for="txt-altura">Altura (cm)</label>
+                    <input type="number" id="txt-altura" value="165">
+                </div>
+                <div class="input-group">
+                    <label for="txt-edad">Edad</label>
+                    <input type="number" id="txt-edad" value="30">
+                </div>
+            </div>
+            <button onclick="guardarPerfil()">Calcular Meta Exacta</button>
             <div class="meta-destacada">Meta Agua Pura: <span id="lbl-meta-agua">2100</span> ml</div>
         </div>
 
@@ -98,19 +124,25 @@
     </div>
 
     <script>
-        // Variables globales de estado
         let aguaPura = 0;
         let otrosLiquidos = 0;
-        let metaAguaPura = 2100; // Valor por defecto
+        let metaAguaPura = 2100;
 
-        // Al cargar la página, recuperamos lo que esté guardado
         window.onload = function() {
+            // Recuperamos el perfil si existe
             if (localStorage.getItem('pesoUsuario')) {
                 document.getElementById('txt-peso').value = localStorage.getItem('pesoUsuario');
-                calcularYMostrarMeta(localStorage.getItem('pesoUsuario'));
+                document.getElementById('txt-altura').value = localStorage.getItem('alturaUsuario');
+                document.getElementById('txt-edad').value = localStorage.getItem('edadUsuario');
+                
+                calcularYMostrarMeta(
+                    localStorage.getItem('pesoUsuario'),
+                    localStorage.getItem('alturaUsuario'),
+                    localStorage.getItem('edadUsuario')
+                );
             }
             
-            // Recuperamos el progreso del día si existe
+            // Recuperamos el progreso diario
             if (localStorage.getItem('aguaPura')) {
                 aguaPura = parseInt(localStorage.getItem('aguaPura'));
                 document.getElementById('lbl-agua').innerText = aguaPura;
@@ -126,17 +158,23 @@
 
         function guardarPerfil() {
             let peso = parseFloat(document.getElementById('txt-peso').value);
-            if (peso > 0) {
+            let altura = parseFloat(document.getElementById('txt-altura').value);
+            let edad = parseInt(document.getElementById('txt-edad').value);
+            
+            if (peso > 0 && altura > 0 && edad > 0) {
                 localStorage.setItem('pesoUsuario', peso);
-                calcularYMostrarMeta(peso);
+                localStorage.setItem('alturaUsuario', altura);
+                localStorage.setItem('edadUsuario', edad);
+                calcularYMostrarMeta(peso, altura, edad);
             }
         }
 
-        function calcularYMostrarMeta(peso) {
-            // Fórmula: 35ml por kilo corporales totales
-            let liquidoTotal = peso * 35;
-            // Tu regla de negocio: el 60% tiene que ser agua pura obligatoria
-            metaAguaPura = Math.round(liquidoTotal * 0.6);
+        function calcularYMostrarMeta(peso, altura, edad) {
+            // Fórmula avanzada indexando los 3 factores métricos
+            let liquidoTotalBase = (peso * 30) + (altura * 0.5) - (edad * 3);
+            
+            // Mantenemos tu regla del 60% mínimo en agua pura destilada
+            metaAguaPura = Math.round(liquidoTotalBase * 0.6);
             
             document.getElementById('lbl-meta-agua').innerText = metaAguaPura;
             document.getElementById('lbl-meta-dinamica').innerText = metaAguaPura;
