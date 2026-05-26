@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Recordatorio de Hidratación</title>
+    <style>
+        /* Un adelanto de CSS oscuro y limpio, bien mobile-first */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button {
+            background-color: #29b6f6;
+            color: #121212;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #4fc3f7; }
+        button:disabled { background-color: #555; color: #888; cursor: not-allowed; }
+        .btn-colageno { background-color: #ec407a; color: white; }
+        .btn-colageno:hover { background-color: #f48fb1; }
+        .btn-mate { background-color: #66bb6a; color: #121212; }
+        .btn-mate:hover { background-color: #98ee99; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mi Hidratación</h1>
+        
+        <!-- Bloque de la mañana -->
+        <div class="card" id="seccion-colageno">
+            <h3>Rutina de la Mañana</h3>
+            <button class="btn-colageno" id="btn-colageno" onclick="tomarColageno()">Tomar Colágeno (150ml)</button>
+        </div>
+
+        <!-- Panel de carga rápida -->
+        <div class="card">
+            <h3>Registrar Consumo</h3>
+            <button onclick="sumarLiquido('agua', 250)">💧 Vaso Agua (250ml)</button>
+            <button class="btn-mate" onclick="sumarLiquido('mate', 500)">🧉 Medio Termo (500ml)</button>
+            <button onclick="sumarLiquido('infusion', 250)">☕ Café / Té (250ml)</button>
+        </div>
+
+        <!-- Progreso -->
+        <div class="card">
+            <h3>Progreso del Día</h3>
+            <p>Agua Pura: <span id="lbl-agua">0</span> ml</p>
+            <p>Otras Infusiones: <span id="lbl-otros">0</span> ml</p>
+        </div>
+    </div>
+
+    <script>
+        // Lógica inicial básica en JS
+        let aguaPura = 0;
+        let otrosLiquidos = 0;
+
+        function tomarColageno() {
+            aguaPura += 150;
+            document.getElementById('lbl-agua').innerText = aguaPura;
+            document.getElementById('btn-colageno').disabled = true;
+            document.getElementById('btn-colageno').innerText = "✨ Colágeno Tomado";
+            // Acá después meteremos el localStorage
+        }
+
+        function sumarLiquido(tipo, cantidad) {
+            if (tipo === 'agua') {
+                aguaPura += cantidad;
+                document.getElementById('lbl-agua').innerText = aguaPura;
+            } else {
+                otrosLiquidos += cantidad;
+                document.getElementById('lbl-otros').innerText = otrosLiquidos;
+            }
+        }
+    </script>
+</body>
+</html>
