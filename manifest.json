@@ -1,0 +1,21 @@
+{
+  "short_name": "AguaPura",
+  "name": "Mi Recordatorio de Hidratación",
+  "icons": [
+    {
+      "src": "https://emojicdn.elk.sh/💧?size=192",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://emojicdn.elk.sh/💧?size=512",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/mi-app-agua/",
+  "background_color": "#121212",
+  "theme_color": "#1e1e1e",
+  "display": "standalone",
+  "orientation": "portrait"
+}
