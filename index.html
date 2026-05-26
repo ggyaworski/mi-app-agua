@@ -261,7 +261,7 @@
             
             // 2 horas en milisegundos son: 2 * 60 * 60 * 1000 = 7200000
             // Para probarlo rápido ahora, dejalo en 10000 (10 segundos) si querés ver si funciona!
-            let tiempoEspera = 5000; 
+            let tiempoEspera = 7200000; 
 
             temporizadorAgua = setTimeout(() => {
                 if (Notification.permission === "granted") {
@@ -276,6 +276,325 @@
         function reiniciarTemporizadorAlerta() {
             // Si tomás agua pura, limpiamos la alerta porque ya cumpliste
             clearTimeout(temporizadorAgua);
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Recordatorio de Hidratación</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button {
+            background-color: #29b6f6;
+            color: #121212;
+            border: none;
+            padding: 12px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #4fc3f7; }
+        button:disabled { background-color: #555; color: #888; cursor: not-allowed; }
+        
+        .btn-colageno { 
+            background-color: #ec407a; 
+            color: white; 
+            width: 100%; 
+            padding: 12px 20px; 
+            font-size: 16px;
+        }
+        .btn-colageno:hover { background-color: #f48fb1; }
+        
+        .grid-inputs, .grid-botones {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .btn-consumo {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            height: 70px;
+        }
+        .btn-mate { background-color: #66bb6a; color: #121212; }
+        .btn-mate:hover { background-color: #98ee99; }
+        
+        input {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 8px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .meta-destacada {
+            font-size: 24px;
+            font-weight: bold;
+            color: #29b6f6;
+            margin: 15px 0 5px 0;
+        }
+        .btn-permiso {
+            background-color: #ffb74d;
+            color: #121212;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        /* Estilo sutil para el botón de reset */
+        .btn-reset {
+            background-color: #e53935;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-reset:hover { background-color: #ef5350; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mi Hidratación</h1>
+        
+        <button id="btn-permiso" class="btn-permiso" onclick="solicitarPermisoNotificaciones()" style="display: none;">
+            🔔 Activar Recordatorios en el Celu
+        </button>
+
+        <div class="card">
+            <h3>Mis Datos Biométricos</h3>
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label for="txt-peso">Peso (kg)</label>
+                    <input type="number" id="txt-peso" value="70">
+                </div>
+                <div class="input-group">
+                    <label for="txt-altura">Altura (cm)</label>
+                    <input type="number" id="txt-altura" value="165">
+                </div>
+                <div class="input-group">
+                    <label for="txt-edad">Edad</label>
+                    <input type="number" id="txt-edad" value="30">
+                </div>
+            </div>
+            <button onclick="guardarPerfil()" style="width: 100%; margin-top: 15px;">Calcular Meta Exacta</button>
+            <div class="meta-destacada">Meta Agua Pura: <span id="lbl-meta-agua">2100</span> ml</div>
+        </div>
+
+        <div class="card" id="seccion-colageno">
+            <h3>Rutina de la Mañana</h3>
+            <button class="btn-colageno" id="btn-colageno" onclick="tomarColageno()">Tomar Colágeno (150ml)</button>
+        </div>
+
+        <div class="card">
+            <h3>Registrar Consumo</h3>
+            <div class="grid-botones">
+                <button class="btn-consumo" onclick="sumarLiquido('agua', 250)">
+                    <span>💧</span>
+                    <span>Agua (250ml)</span>
+                </button>
+                <button class="btn-consumo btn-mate" onclick="sumarLiquido('mate', 500)">
+                    <span>🧉</span>
+                    <span>Mate (500ml)</span>
+                </button>
+                <button class="btn-consumo" onclick="sumarLiquido('infusion', 250)">
+                    <span>☕</span>
+                    <span>Café/Té (250ml)</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Progreso del Día</h3>
+            <p>Agua Pura (y colágeno): <span id="lbl-agua">0</span> / <span id="lbl-meta-dinamica">2100</span> ml</p>
+            <p>Mate e Infusiones: <span id="lbl-otros">0</span> ml</p>
+            
+            <button class="btn-reset" onclick="borrarProgreso()">🗑️ Reiniciar Consumo Diario</button>
+        </div>
+    </div>
+
+    <script>
+        let aguaPura = 0;
+        let otrosLiquidos = 0;
+        let metaAguaPura = 2100;
+        let temporizadorAgua;
+
+        window.onload = function() {
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+                document.getElementById('btn-permiso').style.display = 'block';
+            }
+
+            if (localStorage.getItem('pesoUsuario')) {
+                document.getElementById('txt-peso').value = localStorage.getItem('pesoUsuario');
+                document.getElementById('txt-altura').value = localStorage.getItem('alturaUsuario');
+                document.getElementById('txt-edad').value = localStorage.getItem('edadUsuario');
+                
+                calcularYMostrarMeta(
+                    localStorage.getItem('pesoUsuario'),
+                    localStorage.getItem('alturaUsuario'),
+                    localStorage.getItem('edadUsuario')
+                );
+            }
+            
+            if (localStorage.getItem('aguaPura')) {
+                aguaPura = parseInt(localStorage.getItem('aguaPura'));
+                document.getElementById('lbl-agua').innerText = aguaPura;
+            }
+            if (localStorage.getItem('otrosLiquidos')) {
+                otrosLiquidos = parseInt(localStorage.getItem('otrosLiquidos'));
+                document.getElementById('lbl-otros').innerText = otrosLiquidos;
+            }
+            if (localStorage.getItem('colagenoTomado') === 'true') {
+                deshabilitarBotonColageno();
+            }
+        };
+
+        function solicitarPermisoNotificaciones() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    document.getElementById('btn-permiso').style.display = 'none';
+                    new Notification("¡De una! Te vas a enterar cuando te toque agua pura ✨");
+                }
+            });
+        }
+
+        function guardarPerfil() {
+            let peso = parseFloat(document.getElementById('txt-peso').value);
+            let altura = parseFloat(document.getElementById('txt-altura').value);
+            let edad = parseInt(document.getElementById('txt-edad').value);
+            
+            if (peso > 0 && altura > 0 && edad > 0) {
+                localStorage.setItem('pesoUsuario', peso);
+                localStorage.setItem('alturaUsuario', altura);
+                localStorage.setItem('edadUsuario', edad);
+                calcularYMostrarMeta(peso, altura, edad);
+            }
+        }
+
+        function calcularYMostrarMeta(peso, altura, edad) {
+            let liquidoTotalBase = (peso * 30) + (altura * 0.5) - (edad * 3);
+            metaAguaPura = Math.round(liquidoTotalBase * 0.6);
+            
+            document.getElementById('lbl-meta-agua').innerText = metaAguaPura;
+            document.getElementById('lbl-meta-dinamica').innerText = metaAguaPura;
+        }
+
+        function tomarColageno() {
+            aguaPura += 150;
+            document.getElementById('lbl-agua').innerText = aguaPura;
+            localStorage.setItem('aguaPura', aguaPura);
+            localStorage.setItem('colagenoTomado', 'true');
+            deshabilitarBotonColageno();
+            reiniciarTemporizadorAlerta();
+        }
+
+        function deshabilitarBotonColageno() {
+            document.getElementById('btn-colageno').disabled = true;
+            document.getElementById('btn-colageno').innerText = "✨ Colágeno Tomado";
+        }
+
+        function sumarLiquido(tipo, cantidad) {
+            if (tipo === 'agua') {
+                aguaPura += cantidad;
+                document.getElementById('lbl-agua').innerText = aguaPura;
+                localStorage.setItem('aguaPura', aguaPura);
+                reiniciarTemporizadorAlerta();
+            } else {
+                otrosLiquidos += cantidad;
+                document.getElementById('lbl-otros').innerText = otrosLiquidos;
+                localStorage.setItem('otrosLiquidos', otrosLiquidos);
+                programarAlertaCompensacion();
+            }
+        }
+
+        function programarAlertaCompensacion() {
+            clearTimeout(temporizadorAgua);
+            
+            // Verificación del Modo Nocturno (entre las 21 y las 7)
+            let horaActual = new Date().getHours();
+            if (horaActual >= 21 || horaActual < 7) {
+                console.log("Modo nocturno activo. No se programa alerta.");
+                return; // Corta la ejecución acá y no hace el setTimeout
+            }
+            
+            // 2 horas en milisegundos (7200000). Cambiar a 5000 para pruebas rápidas de 5 seg.
+            let tiempoEspera = 7200000; 
+
+            temporizadorAgua = setTimeout(() => {
+                if (Notification.permission === "granted") {
+                    new Notification("Che, colgada 🧉", {
+                        body: "Venís re bien con el mate, pero clávate un vaso de agua pura para compensar.",
+                        icon: "https://emojicdn.elk.sh/💧"
+                    });
+                }
+            }, tiempoEspera);
+        }
+
+        function reiniciarTemporizadorAlerta() {
+            clearTimeout(temporizadorAgua);
+        }
+
+        // Nueva función para resetear solo los acumulados del día
+        function borrarProgreso() {
+            if (confirm("¿Querés reiniciar los contadores de consumo de hoy?")) {
+                aguaPura = 0;
+                otrosLiquidos = 0;
+                
+                // Actualizamos la pantalla
+                document.getElementById('lbl-agua').innerText = 0;
+                document.getElementById('lbl-otros').innerText = 0;
+                
+                // Destrabamos el botón de colágeno
+                document.getElementById('btn-colageno').disabled = false;
+                document.getElementById('btn-colageno').innerText = "Tomar Colágeno (150ml)";
+                
+                // Limpiamos solo los datos diarios del localStorage (Dejamos los biométricos intactos)
+                localStorage.removeItem('aguaPura');
+                localStorage.removeItem('otrosLiquidos');
+                localStorage.removeItem('colagenoTomado');
+                
+                // Frenamos cualquier alarma que haya quedado picando
+                reiniciarTemporizadorAlerta();
+            }
         }
     </script>
 </body>
