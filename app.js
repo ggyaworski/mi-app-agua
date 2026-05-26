@@ -3,6 +3,13 @@ let otrosLiquidos = 0;
 let metaAguaPura = 2100;
 let temporizadorAgua;
 
+// Registrar el Service Worker para habilitar la instalación nativa
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service Worker Registrado Exitosamente'))
+            .catch(err => console.log('Error al registrar Service Worker', err));
+    }
+
 window.onload = function() {
     if (Notification.permission !== "granted" && Notification.permission !== "denied") {
         document.getElementById('btn-permiso').style.display = 'block';
